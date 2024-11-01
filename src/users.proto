@@ -3,9 +3,10 @@ syntax="proto3";
 package users;
 
 service UserService {
-    rpc GetAllUsers(Empty) returns (GetAllUsersResponse) {}
+    rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse) {}
     rpc GetUserProfileById(GetUserProfileByIdRequest) returns (GetUserProfileByIdResponse) {}
     rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {}
+    rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {}
     rpc GetUserScores(GetUserScoresRequest) returns (GetUserScoresResponse) {}
     rpc RemoveUser(RemoveUserRequest) returns (RemoveUserResponse) {}
 }
@@ -21,6 +22,12 @@ message User {
     string createdAt = 8;
     string updatedAt = 9;
     int32 status = 10;
+}
+
+message Metadata {
+    int32 page = 1;
+    int32 limit = 2;
+    int32 totalPage = 3;
 }
 
 message Score {
@@ -39,6 +46,7 @@ message GetAllUsersRequest {
 
 message GetAllUsersResponse {
     repeated User users = 1;
+    Metadata metadata = 2;
 }
 
 message GetUserProfileByIdRequest {
@@ -50,12 +58,22 @@ message GetUserProfileByIdResponse {
 }
 
 message UpdateProfileRequest {
+    string id = 1;
     string name = 2;
     string lastname = 3;
     string profilePicture = 6;
 }
 
 message UpdateProfileResponse {
+    User user = 1;
+}
+
+message UpdateUserStatusRequest {
+    string id = 1;
+    int32 status = 2;
+}
+
+message UpdateUserStatusResponse {
     User user = 1;
 }
 

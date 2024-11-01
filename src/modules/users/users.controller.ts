@@ -1,24 +1,48 @@
 import { Controller } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { GrpcMethod } from '@nestjs/microservices';
+import { PaginationQueryDto } from 'src/common/dto/pagination.dto';
+import {
+  GetAllUsersResponse,
+  GetUserProfileByIdRequest,
+  GetUserProfileByIdResponse,
+  RemoveUserRequest,
+  RemoveUserResponse,
+  UpdateProfileRequest,
+  UpdateProfileResponse,
+  UpdateUserStatusRequest,
+  UpdateUserStatusResponse
+} from './user.interface';
 
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @GrpcMethod('UserService', 'GetAllUsers')
-  getAllUsers() {
-    return this.usersService.getAllUsers();
+  async getAllUsers(requestData: PaginationQueryDto): Promise<GetAllUsersResponse> {
+    const { data, metadata } = await this.usersService.getAllUsers(requestData);
+    return {
+      users: data,
+      metadata
+    };
   }
 
   @GrpcMethod('UserService', 'GetUserProfileById')
-  getUserProfileById() {
-    return this.usersService.getUserProfileById();
+  async getUserProfileById(
+    requestData: GetUserProfileByIdRequest
+  ): Promise<GetUserProfileByIdResponse> {
+    const user = await this.usersService.getUserProfileById(requestData);
+    return {
+      user
+    };
   }
 
   @GrpcMethod('UserService', 'UpdateProfile')
-  updateProfile() {
-    return this.usersService.updateProfile();
+  async updateProfile(requestData: UpdateProfileRequest): Promise<UpdateProfileResponse> {
+    const user = await this.usersService.updateProfile(requestData);
+    return {
+      user
+    };
   }
 
   @GrpcMethod('UserService', 'GetUserScores')
@@ -26,8 +50,17 @@ export class UsersController {
     return this.usersService.getUserScores();
   }
 
+  @GrpcMethod('UserService', 'UpdateUserStatus')
+  async updateUserStatus(requestData: UpdateUserStatusRequest): Promise<UpdateUserStatusResponse> {
+    const user = await this.usersService.updateUserStatus(requestData);
+    return {
+      user
+    };
+  }
+
   @GrpcMethod('UserService', 'RemoveUser')
-  removeUser() {
-    return this.usersService.removeUser();
+  async removeUser(requestData: RemoveUserRequest): Promise<RemoveUserResponse> {
+    await this.usersService.removeUser(requestData);
+    return {};
   }
 }
