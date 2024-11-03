@@ -8,7 +8,7 @@ import {
   RemoveUserRequest,
   UpdateProfileRequest,
   UpdateUserStatusRequest
-} from './user.interface';
+} from '../../common/interfaces/user.interface';
 import { RpcException } from '@nestjs/microservices';
 import { status } from '@grpc/grpc-js';
 import { compare, hash } from 'bcryptjs';
@@ -84,11 +84,12 @@ export class UsersService {
   async getAllUsers(paginationDto: PaginationQueryDto) {
     const { page = 1, limit = 10 } = paginationDto;
 
-    const totalPages = await this.prismaService.user.count();
+    const total = await this.prismaService.user.count();
 
     const users = await this.prismaService.user.findMany({
       skip: (page - 1) * limit,
-      take: limit
+      take: limit,
+      orderBy: { createdAt: 'desc' }
     });
 
     return {
@@ -96,7 +97,8 @@ export class UsersService {
       metadata: {
         limit,
         page,
-        totalPages
+        totalItems: total,
+        totalPages: Math.ceil(total / limit)
       }
     };
   }

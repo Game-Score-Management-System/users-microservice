@@ -29,7 +29,8 @@ message User {
 message Metadata {
     int32 page = 1;
     int32 limit = 2;
-    int32 totalPage = 3;
+    int32 totalItems = 3;
+    int32 totalPages = 4;
 }
 
 message Score {

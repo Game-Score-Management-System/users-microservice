@@ -16,7 +16,7 @@ import {
   UpdateProfileResponse,
   UpdateUserStatusRequest,
   UpdateUserStatusResponse
-} from './user.interface';
+} from '../../common/interfaces/user.interface';
 
 @Controller()
 export class UsersController {

@@ -1,3 +1,5 @@
+import { Metadata } from './metadata.interface';
+
 export interface User {
   id: string;
   name: string;
@@ -47,11 +49,7 @@ export interface GetAllUsersRequest {
 
 export interface GetAllUsersResponse {
   users: User[];
-  metadata: {
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
+  metadata: Metadata;
 }
 
 export interface GetUserProfileByIdRequest {
