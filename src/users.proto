@@ -3,6 +3,8 @@ syntax="proto3";
 package users;
 
 service UserService {
+    rpc RegisterPlayer(RegisterPlayerRequest) returns (RegisterPlayerResponse) {}
+    rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse) {}
     rpc GetUserProfileById(GetUserProfileByIdRequest) returns (GetUserProfileByIdResponse) {}
     rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {}
@@ -37,6 +39,26 @@ message Score {
     int32 score = 4;
     string createdAt = 5;
     string updatedAt = 6;
+}
+
+message RegisterPlayerRequest {
+    string name = 1;
+    string lastname = 2;
+    string email = 3;
+    string password = 6;
+}
+
+message RegisterPlayerResponse {
+    User user = 1;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    User user = 1;
 }
 
 message GetAllUsersRequest {

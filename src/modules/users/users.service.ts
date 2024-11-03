@@ -3,16 +3,83 @@ import { PrismaService } from 'src/common/services/prisma.service';
 import { PaginationQueryDto } from 'src/common/dto/pagination.dto';
 import {
   GetUserProfileByIdRequest,
+  LoginRequest,
+  RegisterPlayerRequest,
   RemoveUserRequest,
   UpdateProfileRequest,
   UpdateUserStatusRequest
 } from './user.interface';
 import { RpcException } from '@nestjs/microservices';
 import { status } from '@grpc/grpc-js';
+import { compare, hash } from 'bcryptjs';
+import { roles } from 'src/common/interfaces/role.interface';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
+
+  async registerPlayer(data: RegisterPlayerRequest) {
+    const { email, lastname, name, password } = data;
+    const username = `@${email.split('@').at(0)}`;
+
+    try {
+      const userExists = await this.prismaService.user.findUnique({ where: { email } });
+
+      if (userExists) {
+        throw new RpcException({
+          code: status.ALREADY_EXISTS,
+          message: 'User already exists, please login'
+        });
+      }
+
+      const passwordHash = await hash(password, 10);
+
+      const newUser = await this.prismaService.user.create({
+        data: {
+          username,
+          email,
+          lastname,
+          name,
+          password: passwordHash,
+          role: roles.PLAYER,
+          profilePicture: `https://robohash.org/${name}`
+        }
+      });
+
+      const { password: _, ...userWithoutPassword } = newUser;
+
+      return userWithoutPassword;
+    } catch (error) {
+      throw new RpcException({
+        code: status.INTERNAL,
+        message: `Failed to register user: ${error.message}`
+      });
+    }
+  }
+
+  async login(data: LoginRequest) {
+    const { email, password } = data;
+
+    const user = await this.prismaService.user.findUnique({ where: { email } });
+
+    if (!user) {
+      throw new RpcException({
+        code: status.NOT_FOUND,
+        message: 'User not found, please register'
+      });
+    }
+
+    const passwordMatch = await compare(password, user.password);
+
+    if (!passwordMatch) {
+      throw new RpcException({
+        code: status.UNAUTHENTICATED,
+        message: 'Invalid credentials'
+      });
+    }
+
+    return user;
+  }
 
   async getAllUsers(paginationDto: PaginationQueryDto) {
     const { page = 1, limit = 10 } = paginationDto;

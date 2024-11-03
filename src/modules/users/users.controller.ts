@@ -6,6 +6,10 @@ import {
   GetAllUsersResponse,
   GetUserProfileByIdRequest,
   GetUserProfileByIdResponse,
+  LoginRequest,
+  LoginResponse,
+  RegisterPlayerRequest,
+  RegisterPlayerResponse,
   RemoveUserRequest,
   RemoveUserResponse,
   UpdateProfileRequest,
@@ -17,6 +21,22 @@ import {
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @GrpcMethod('UserService', 'Login')
+  async login(requestData: LoginRequest): Promise<LoginResponse> {
+    const user = await this.usersService.login(requestData);
+    return {
+      user
+    };
+  }
+
+  @GrpcMethod('UserService', 'RegisterPlayer')
+  async registerPlayer(requestData: RegisterPlayerRequest): Promise<RegisterPlayerResponse> {
+    const user = await this.usersService.registerPlayer(requestData);
+    return {
+      user
+    };
+  }
 
   @GrpcMethod('UserService', 'GetAllUsers')
   async getAllUsers(requestData: PaginationQueryDto): Promise<GetAllUsersResponse> {

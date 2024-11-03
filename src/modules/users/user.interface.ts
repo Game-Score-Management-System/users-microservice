@@ -20,6 +20,26 @@ export interface Score {
   updatedAt: string;
 }
 
+export interface RegisterPlayerRequest {
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+}
+
+export interface RegisterPlayerResponse {
+  user: User;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: User;
+}
+
 export interface GetAllUsersRequest {
   page: number;
   limit: number;
