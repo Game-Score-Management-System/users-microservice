@@ -84,7 +84,8 @@ message UpdateProfileRequest {
     string id = 1;
     string name = 2;
     string lastname = 3;
-    string profilePicture = 6;
+    string profilePicture = 4;
+    string username = 5;
 }
 
 message UpdateProfileResponse {

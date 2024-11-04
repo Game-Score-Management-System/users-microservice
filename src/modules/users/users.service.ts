@@ -60,7 +60,7 @@ export class UsersService {
   async login(data: LoginRequest) {
     const { email, password } = data;
 
-    const user = await this.prismaService.user.findUnique({ where: { email } });
+    const user = await this.prismaService.user.findUnique({ where: { email, status: true } });
 
     if (!user) {
       throw new RpcException({
@@ -118,11 +118,20 @@ export class UsersService {
   }
 
   async updateProfile(data: UpdateProfileRequest) {
-    const { id, name, lastname, profilePicture } = data;
+    const { id, name, lastname, profilePicture, username } = data;
 
+    if (username) {
+      const userExists = await this.prismaService.user.findUnique({ where: { username } });
+      if (userExists) {
+        throw new RpcException({
+          code: status.ALREADY_EXISTS,
+          message: 'Username already exists, please choose another one'
+        });
+      }
+    }
     try {
       const user = await this.prismaService.user.update({
-        data: { name, lastname, profilePicture },
+        data: { name, lastname, profilePicture, username },
         where: { id }
       });
 

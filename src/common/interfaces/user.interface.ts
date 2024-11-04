@@ -62,9 +62,10 @@ export interface GetUserProfileByIdResponse {
 
 export interface UpdateProfileRequest {
   id: string;
-  name: string;
-  lastname: string;
-  profilePicture: string;
+  name?: string;
+  lastname?: string;
+  profilePicture?: string;
+  username?: string;
 }
 
 export interface UpdateProfileResponse {
