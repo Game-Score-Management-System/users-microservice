@@ -14,8 +14,8 @@ import {
   RemoveUserResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
-  UpdateUserStatusRequest,
-  UpdateUserStatusResponse
+  UpdateUserRequest,
+  UpdateUserResponse
 } from '../../common/interfaces/user.interface';
 
 @Controller()
@@ -70,9 +70,9 @@ export class UsersController {
     return this.usersService.getUserScores();
   }
 
-  @GrpcMethod('UserService', 'UpdateUserStatus')
-  async updateUserStatus(requestData: UpdateUserStatusRequest): Promise<UpdateUserStatusResponse> {
-    const user = await this.usersService.updateUserStatus(requestData);
+  @GrpcMethod('UserService', 'UpdateUser')
+  async updateUser(requestData: UpdateUserRequest): Promise<UpdateUserResponse> {
+    const user = await this.usersService.updateUser(requestData);
     return {
       user
     };

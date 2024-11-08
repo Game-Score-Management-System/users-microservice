@@ -1,3 +1,4 @@
+import { Role } from 'src/modules/users/dto/create-user.dto';
 import { Metadata } from './metadata.interface';
 
 export interface User {
@@ -86,12 +87,13 @@ export interface RemoveUserRequest {
   id: string;
 }
 
-export interface UpdateUserStatusRequest {
+export interface UpdateUserRequest {
   id: string;
   status: boolean;
+  role: Role;
 }
 
-export interface UpdateUserStatusResponse {
+export interface UpdateUserResponse {
   user: User;
 }
 

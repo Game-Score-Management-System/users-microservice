@@ -7,12 +7,13 @@ import {
   RegisterPlayerRequest,
   RemoveUserRequest,
   UpdateProfileRequest,
-  UpdateUserStatusRequest
+  UpdateUserRequest
 } from '../../common/interfaces/user.interface';
 import { RpcException } from '@nestjs/microservices';
 import { status } from '@grpc/grpc-js';
 import { compare, hash } from 'bcryptjs';
 import { roles } from 'src/common/interfaces/role.interface';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -146,11 +147,11 @@ export class UsersService {
 
   getUserScores() {}
 
-  async updateUserStatus(data: UpdateUserStatusRequest) {
-    const { id, status: userStatus } = data;
+  async updateUser(data: UpdateUserRequest) {
+    const { id, status: userStatus, role } = data;
     try {
       const user = await this.prismaService.user.update({
-        data: { status: Boolean(userStatus) },
+        data: { status: userStatus != null ? Boolean(userStatus) : undefined, role: role as Role },
         where: { id }
       });
 
