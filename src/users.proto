@@ -3,10 +3,12 @@ syntax="proto3";
 package users;
 
 service UserService {
+    rpc RegisterPlayer(RegisterPlayerRequest) returns (RegisterPlayerResponse) {}
+    rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc GetAllUsers(GetAllUsersRequest) returns (GetAllUsersResponse) {}
     rpc GetUserProfileById(GetUserProfileByIdRequest) returns (GetUserProfileByIdResponse) {}
     rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse) {}
-    rpc UpdateUserStatus(UpdateUserStatusRequest) returns (UpdateUserStatusResponse) {}
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {}
     rpc GetUserScores(GetUserScoresRequest) returns (GetUserScoresResponse) {}
     rpc RemoveUser(RemoveUserRequest) returns (RemoveUserResponse) {}
 }
@@ -27,7 +29,8 @@ message User {
 message Metadata {
     int32 page = 1;
     int32 limit = 2;
-    int32 totalPage = 3;
+    int32 totalItems = 3;
+    int32 totalPages = 4;
 }
 
 message Score {
@@ -37,6 +40,26 @@ message Score {
     int32 score = 4;
     string createdAt = 5;
     string updatedAt = 6;
+}
+
+message RegisterPlayerRequest {
+    string name = 1;
+    string lastname = 2;
+    string email = 3;
+    string password = 6;
+}
+
+message RegisterPlayerResponse {
+    User user = 1;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    User user = 1;
 }
 
 message GetAllUsersRequest {
@@ -61,19 +84,21 @@ message UpdateProfileRequest {
     string id = 1;
     string name = 2;
     string lastname = 3;
-    string profilePicture = 6;
+    string profilePicture = 4;
+    string username = 5;
 }
 
 message UpdateProfileResponse {
     User user = 1;
 }
 
-message UpdateUserStatusRequest {
+message UpdateUserRequest {
     string id = 1;
     int32 status = 2;
+    string role = 3;
 }
 
-message UpdateUserStatusResponse {
+message UpdateUserResponse {
     User user = 1;
 }
 

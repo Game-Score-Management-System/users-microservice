@@ -6,17 +6,37 @@ import {
   GetAllUsersResponse,
   GetUserProfileByIdRequest,
   GetUserProfileByIdResponse,
+  LoginRequest,
+  LoginResponse,
+  RegisterPlayerRequest,
+  RegisterPlayerResponse,
   RemoveUserRequest,
   RemoveUserResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
-  UpdateUserStatusRequest,
-  UpdateUserStatusResponse
-} from './user.interface';
+  UpdateUserRequest,
+  UpdateUserResponse
+} from '../../common/interfaces/user.interface';
 
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @GrpcMethod('UserService', 'Login')
+  async login(requestData: LoginRequest): Promise<LoginResponse> {
+    const user = await this.usersService.login(requestData);
+    return {
+      user
+    };
+  }
+
+  @GrpcMethod('UserService', 'RegisterPlayer')
+  async registerPlayer(requestData: RegisterPlayerRequest): Promise<RegisterPlayerResponse> {
+    const user = await this.usersService.registerPlayer(requestData);
+    return {
+      user
+    };
+  }
 
   @GrpcMethod('UserService', 'GetAllUsers')
   async getAllUsers(requestData: PaginationQueryDto): Promise<GetAllUsersResponse> {
@@ -50,9 +70,9 @@ export class UsersController {
     return this.usersService.getUserScores();
   }
 
-  @GrpcMethod('UserService', 'UpdateUserStatus')
-  async updateUserStatus(requestData: UpdateUserStatusRequest): Promise<UpdateUserStatusResponse> {
-    const user = await this.usersService.updateUserStatus(requestData);
+  @GrpcMethod('UserService', 'UpdateUser')
+  async updateUser(requestData: UpdateUserRequest): Promise<UpdateUserResponse> {
+    const user = await this.usersService.updateUser(requestData);
     return {
       user
     };

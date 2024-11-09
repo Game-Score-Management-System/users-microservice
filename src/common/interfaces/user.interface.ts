@@ -1,3 +1,6 @@
+import { Role } from 'src/modules/users/dto/create-user.dto';
+import { Metadata } from './metadata.interface';
+
 export interface User {
   id: string;
   name: string;
@@ -20,6 +23,26 @@ export interface Score {
   updatedAt: string;
 }
 
+export interface RegisterPlayerRequest {
+  name: string;
+  lastname: string;
+  email: string;
+  password: string;
+}
+
+export interface RegisterPlayerResponse {
+  user: User;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: User;
+}
+
 export interface GetAllUsersRequest {
   page: number;
   limit: number;
@@ -27,11 +50,7 @@ export interface GetAllUsersRequest {
 
 export interface GetAllUsersResponse {
   users: User[];
-  metadata: {
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
+  metadata: Metadata;
 }
 
 export interface GetUserProfileByIdRequest {
@@ -44,9 +63,10 @@ export interface GetUserProfileByIdResponse {
 
 export interface UpdateProfileRequest {
   id: string;
-  name: string;
-  lastname: string;
-  profilePicture: string;
+  name?: string;
+  lastname?: string;
+  profilePicture?: string;
+  username?: string;
 }
 
 export interface UpdateProfileResponse {
@@ -67,12 +87,13 @@ export interface RemoveUserRequest {
   id: string;
 }
 
-export interface UpdateUserStatusRequest {
+export interface UpdateUserRequest {
   id: string;
   status: boolean;
+  role: Role;
 }
 
-export interface UpdateUserStatusResponse {
+export interface UpdateUserResponse {
   user: User;
 }
 
