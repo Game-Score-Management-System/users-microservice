@@ -9,7 +9,7 @@ async function bootstrap() {
     options: {
       package: 'users',
       protoPath: join(__dirname, 'users.proto'),
-      url: process.env.USERS_SERVICE_URL ?? 'localhost:50051'
+      url: process.env.USERS_SERVICE_GRPC ?? 'localhost:50051'
     }
   });
   await app.listen();
