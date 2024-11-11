@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import { PaginationQueryDto } from 'src/common/dto/pagination.dto';
 import {
+  GetAllUsersRequest,
   GetAllUsersResponse,
   GetUserProfileByIdRequest,
   GetUserProfileByIdResponse,
@@ -39,7 +40,7 @@ export class UsersController {
   }
 
   @GrpcMethod('UserService', 'GetAllUsers')
-  async getAllUsers(requestData: PaginationQueryDto): Promise<GetAllUsersResponse> {
+  async getAllUsers(requestData: GetAllUsersRequest): Promise<GetAllUsersResponse> {
     const { data, metadata } = await this.usersService.getAllUsers(requestData);
     return {
       users: data,

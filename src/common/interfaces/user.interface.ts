@@ -46,6 +46,7 @@ export interface LoginResponse {
 export interface GetAllUsersRequest {
   page: number;
   limit: number;
+  search?: string;
 }
 
 export interface GetAllUsersResponse {

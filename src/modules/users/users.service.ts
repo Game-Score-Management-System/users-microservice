@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/services/prisma.service';
 import { PaginationQueryDto } from 'src/common/dto/pagination.dto';
 import {
+  GetAllUsersRequest,
   GetUserProfileByIdRequest,
   LoginRequest,
   RegisterPlayerRequest,
@@ -82,12 +83,30 @@ export class UsersService {
     return user;
   }
 
-  async getAllUsers(paginationDto: PaginationQueryDto) {
-    const { page = 1, limit = 10 } = paginationDto;
+  async getAllUsers(data: GetAllUsersRequest) {
+    const { page = 1, limit = 10, search } = data;
 
-    const total = await this.prismaService.user.count();
+    const query = search ?? '';
+    const total = await this.prismaService.user.count({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { lastname: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } },
+          { username: { contains: query, mode: 'insensitive' } }
+        ]
+      }
+    });
 
     const users = await this.prismaService.user.findMany({
+      where: {
+        OR: [
+          { name: { contains: query, mode: 'insensitive' } },
+          { lastname: { contains: query, mode: 'insensitive' } },
+          { email: { contains: query, mode: 'insensitive' } },
+          { username: { contains: query, mode: 'insensitive' } }
+        ]
+      },
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { createdAt: 'desc' }
